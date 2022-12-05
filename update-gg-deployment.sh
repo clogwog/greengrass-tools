@@ -1,23 +1,6 @@
 #!/bin/sh
 #set -x
 
-deployment_template="{  
-  \"targetArn\": \"arn:aws:iot:TEMPLATE_REGION:TEMPLATE_AWSACCOUNT:thinggroup/TEMPLATE_DEPLOYMENT_THING_GROUP\", 
-  \"deploymentName\": \"TEMPLATE_DEPLOYMENT_NAME\", 
-  \"components\": TEMPLATE_COMPONENTS , 
-  \"deploymentPolicies\": { 
-    \"failureHandlingPolicy\": \"DO_NOTHING\", 
-    \"componentUpdatePolicy\": { 
-      \"timeoutInSeconds\": 600, 
-      \"action\": \"NOTIFY_COMPONENTS\" 
-    }, 
-    \"configurationValidationPolicy\": { 
-      \"timeoutInSeconds\": 600 
-    } 
-  }, 
-  \"iotJobConfiguration\": {} 
-} "
-
 deployment_template="{ \"targetArn\": \"arn:aws:iot:TEMPLATE_REGION:TEMPLATE_AWSACCOUNT:thinggroup/TEMPLATE_DEPLOYMENT_THING_GROUP\", \"deploymentName\": \"TEMPLATE_DEPLOYMENT_NAME\", \"components\": TEMPLATE_COMPONENTS , \"deploymentPolicies\": { \"failureHandlingPolicy\": \"DO_NOTHING\", \"componentUpdatePolicy\": { \"timeoutInSeconds\": 600, \"action\": \"NOTIFY_COMPONENTS\" }, \"configurationValidationPolicy\": { \"timeoutInSeconds\": 600 } },  \"iotJobConfiguration\": {} } "
 
 
@@ -74,6 +57,8 @@ sed   -i "s|TEMPLATE_AWSACCOUNT|${account}|g" ./tmpDeployment.json
 
 cat ./tmpDeployment.json
 
-aws greengrassv2 create-deployment --cli-input-json file://./tmpDeployment.json
+SCRIPTHOME="$( cd "$(dirname "$0")"/.. ; pwd -P )"
+
+aws greengrassv2 create-deployment --cli-input-json file://${SCRIPTHOME}/tmpDeployment.json
 
 rm -f ./tmpDeployment.json
